@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Search</title>
+<style>
+    *{
+        margin: 10px;
+    }
+</style>
+</head>
+<body>
+<h1>Movies</h1>
+<div id="storeAge">
+    <input class="movies-btn" type="button" value="Batman">
+</div>
+<input type="text" id="movieName">
+<input type="button" id="addMovie" value="Kino əlavə et">
+<div id="movieInfo">
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>    
+<script>
+
+
+$("#addMovie").on("click", function(event) {
+    inputValue = $("#movieName").val()
+    $("#storeAge").append(`<input class="movies-btn" type="button" value="${inputValue}">`)
+
+    console.log("input: ", inputValue)
+
+})
+
+var movieName = ""
+
+$(document).on("click", ".movies-btn", function(){
+    movieName = this.value
+    console.log("kino: ", movieName)
+    displayMovieInfo()
+})
+
+
+
+function displayMovieInfo() {
+
+var queryURL = "https://www.omdbapi.com/?t=" + movieName + "&apikey=30337a4a";
+
+$.ajax({
+  url: queryURL,
+  method: "GET"
+}).done(function(response) {
+    $("#movieInfo").prepend(
+    `<div class="foundMovies">
+        <p>Rating: ${response.Rated}</p>
+        <p class="scores">Scores: 
+            
+        </p>
+        <p>Release Date: ${response.Released}</p>
+        <p>Plot: ${response.Plot}</p>
+        <img src="${response.Poster}"></img>
+
+    </div>`)
+    for(i = 0; i < response.Ratings.length; i++ ){
+                $(".scores").append(`<span>${response.Ratings[i].Source}: ${response.Ratings[i].Value} </span>`)
+            }
+    console.log(response);
+}).catch(function(){
+    console.log("ajax ishlemir")
+})
+
+};
+
+
+</script>
+</body>
+</html>
